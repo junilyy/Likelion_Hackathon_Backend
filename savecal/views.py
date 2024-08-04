@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from .models import Food, Exercise
 from .serializers import FoodSerializer, ExerciseSerializer
-
+from django.db import models
 
 class UserProfileView(APIView):  #user 정보 받아오는 예시.
     permission_classes = [IsAuthenticated]
