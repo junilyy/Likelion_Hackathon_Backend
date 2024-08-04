@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-x_zeg3*+wbbo(+cumo()o=&^f*2ku^0%a_%oc4pq^7rkl@cpki
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+]
 SECURE_COOKIE = False
 
 # Application definition
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
+    'savecal',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
