@@ -55,14 +55,18 @@ class ExerciseCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
 class FoodListView(generics.ListAPIView):
-    queryset = Food.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Food.objects.filter(user=self.request.user)
+
 class ExerciseListView(generics.ListAPIView):
-    queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Exercise.objects.filter(user=self.request.user)
 # part1
 # 1. 음식과 운동 항목들, date, user 저장할 수 있는 model 구축(frontend에서 보내주는 값 DB에 저장해야 되니까.)
 # 2. frontend에서 POST하는 음식-운동 칼로리, 날짜, 로그인한 유저 정보(username?)를 DB에 POST하는 view 구현.
