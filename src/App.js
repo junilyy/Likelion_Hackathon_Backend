@@ -13,6 +13,8 @@ import Page2 from './components/Page2';
 import Page3 from './components/Page3';
 import Page4 from './components/Page4';
 import Page5 from './components/Page5';
+import MapContainer from './components/map/MapContainer';
+import RestaurantRecommendations from './components/map/RestaurantRecommendations';
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -80,6 +82,8 @@ const App = () => {
         <Route path="/page3" element={<Page3 />} />
         <Route path="/page4" element={<Page4 />} />
         <Route path="/page5" element={<Page5 />} />
+        <Route path="/map" element={<MapContainer />} />
+        <Route path="/recommendations" element={<RestaurantRecommendations />} />
       </Routes>
     </Router>
   );

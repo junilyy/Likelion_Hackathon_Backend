@@ -20,7 +20,7 @@ const Page5 = ({ className, ...props }) => {
     // 예: fetch('/api/submit', { method: 'POST', body: JSON.stringify({ activityLevel: selectedOption }) })
     
     // 데이터를 성공적으로 전송한 후 특정 페이지로 이동
-    navigate('/next-page'); // '/next-page'는 특정 페이지의 경로로 변경해야 함
+    navigate('/');
   };
 
   return (

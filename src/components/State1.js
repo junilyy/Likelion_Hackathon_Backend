@@ -6,7 +6,8 @@ import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 
 
 const State1 = ({ className, ...props }) => {
@@ -18,7 +19,7 @@ const State1 = ({ className, ...props }) => {
     const [eatKcal, setEatKcal] = useState(0);//섭취한 칼로리
     const [bmr, setBmr] = useState(0); // 기초대사량
     const [burnedCalories, setBurnedCalories] = useState(0); // 소모한 칼로리
-    
+
 
     useEffect(() => {
         // 백엔드에서 데이터를 가져오는 함수
@@ -38,7 +39,7 @@ const State1 = ({ className, ...props }) => {
             }
         };
 
-        fetchData();    
+        fetchData();
     }, []);
 
     const percentConsumed = Math.min((eatKcal / 3000) * 100, 100);
@@ -46,9 +47,10 @@ const State1 = ({ className, ...props }) => {
     const percentBurned = Math.min((totalCalories / 3000) * 100, 100);
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100vh', width: '100vw', marginBottom: 0, backgroundColor: '#F3F4F8' }}>
-            <div style={{ width: '390px', height: '62px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginLeft: 0, color: '#F3F4F8', backgroundColor: '#F3F4F8', borderRadius: '10px' }}>
-                <div className="Calender" style={{ width: 166, height: 47, background: '#B1B8C0', borderRadius: 12, justifyContent: 'flex-start', alignItems: 'center', gap: 16, display: 'inline-flex', marginTop: '15px' }}>
+        <div className="first" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100vh', width: '100vw', marginBottom: 0, backgroundColor: '#F3F4F8' }}>
+            <div style={{ marginTop:"20px" , width: '350px', height: '62px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 0, color: '#F3F4F8', backgroundColor: '#F3F4F8', borderRadius: '10px' }}>
+                <FontAwesomeIcon icon={faArrowLeft} style={{ color: '#000000', fontSize: 24 }} onClick={() => navigate('/')} />
+                <div className="Calender" style={{ width: 166, height: 47, background: '#B1B8C0', borderRadius: 12, justifyContent: 'flex-start', alignItems: 'center', gap: 16, display: 'inline-flex' }}>
                     <div className="IconCalender" style={{ width: 44, height: 30, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <FontAwesomeIcon icon={faCalendarDays} style={{ color: '#000000', fontSize: 24 }} />
                     </div>
@@ -56,8 +58,8 @@ const State1 = ({ className, ...props }) => {
                         {currentDate}
                     </div>
                 </div>
+                <FontAwesomeIcon icon={faHouse} style={{ color: '#000000', fontSize: 24 }} onClick={() => navigate('/')}/>
             </div>
-
             <div className="border-line0" style={{ width: '80%', borderTop: '3px solid #F3F4F8', borderRadius: '2px', marginTop: '10px', marginBottom: '10px' }}></div>
 
             <div style={{ width: '390px', height: '220px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginLeft: 0, color: '#ffffff', backgroundColor: '#ffffff', borderRadius: '10px' }}>
@@ -171,8 +173,8 @@ const State1 = ({ className, ...props }) => {
                 <div style={{ marginTop: '10px', marginLeft: '25.5px', alignSelf: 'stretch', color: 'black', fontSize: 18, fontFamily: 'Noto Sans KR', fontWeight: '800', wordWrap: 'break-word' }}>소모한 칼로리    <span style={{ fontSize: 14, fontFamily: 'Noto Sans KR', fontWeight: '600', wordWrap: 'break-word' }}>(kcal)</span></div>
                 <div className="Consumegraph" style={{ marginLeft: '25.5px', width: 338, height: 33, position: 'relative' }}>
                     <div className="Rectangle11" style={{ width: 338, height: 33, left: 0, top: 0, position: 'absolute', background: '#B5D4F1', borderRadius: 10 }}>
-                    <div className="Rectangle12" style={{ width: `${percentBurned}%`, height: '100%', background: '#3D81BE', borderRadius: 10 }} />
-                    </div> 
+                        <div className="Rectangle12" style={{ width: `${percentBurned}%`, height: '100%', background: '#3D81BE', borderRadius: 10 }} />
+                    </div>
                 </div>
                 <div className="Frame42" style={{ marginLeft: '25.5px', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'center', gap: 121, display: 'inline-flex' }}>
                     <div className="Kcal" style={{ width: 33, height: 29, color: 'black', fontSize: 13, fontFamily: 'Noto Sans KR', fontWeight: '700', wordWrap: 'break-word' }}>0</div>
@@ -182,7 +184,7 @@ const State1 = ({ className, ...props }) => {
 
             </div>
 
-            <div className="Bottom" style={{ width: '100%', height: 61, background: '#D9D9D9', position: 'fixed', bottom: 0, left: 0 }} />
+
 
 
 
