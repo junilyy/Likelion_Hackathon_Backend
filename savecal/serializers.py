@@ -8,12 +8,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 from .models import Food, Exercise
 
+
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
-        fields = ('id', 'name', 'calories', 'date', 'user')
+        fields = ('id', 'name', 'calories', 'date')
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
-        fields = ('id', 'name', 'calories_burned', 'date', 'user')
+        fields = ('id', 'name', 'calories_burned', 'date')

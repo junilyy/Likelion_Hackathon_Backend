@@ -69,24 +69,22 @@ class CombinedView(APIView):
 
         if view_type == 'food-create':
             # 새로운 음식 데이터를 생성
-            serializer = FoodSerializer(data=request.data)
+            serializer = FoodSerializer(data=request.data, many=True)
             if serializer.is_valid():
-                serializer.save(user=user)
+                self.perform_create(serializer, user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif view_type == 'exercise-create':
             # 새로운 운동 데이터를 생성
-            serializer = ExerciseSerializer(data=request.data)
+            serializer = ExerciseSerializer(data=request.data, many=True)
             if serializer.is_valid():
-                serializer.save(user=user)
+                self.perform_create(serializer, user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # 유효하지 않은 view_type 요청에 대한 오류 응답
         return Response({'error': 'Invalid view type'}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class UserProfileView(APIView):  #user 정보 받아오는 예시.
@@ -125,14 +123,38 @@ class UserBMIView(APIView):
         return Response(bmi_data)
 
 class FoodCreateView(generics.CreateAPIView):
-    queryset = Food.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [IsAuthenticated]
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        for data in serializer.validated_data:
+            Food.objects.create(user=self.request.user, **data)
+
+
 class ExerciseCreateView(generics.CreateAPIView):
-    queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
     permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        # 데이터를 리스트로 변환하여 직렬화
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        # 데이터를 저장하는 perform_create 메서드 호출
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        # 유저를 현재 요청한 사용자로 설정하여 저장
+        for data in serializer.validated_data:
+            Exercise.objects.create(user=self.request.user, **data)
     
 class FoodListView(generics.ListAPIView):
     serializer_class = FoodSerializer
