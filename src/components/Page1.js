@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
+import axios from '../axiosConfig'; // 수정된 부분: axiosConfig.js 파일에서 정의한 Axios 인스턴스를 사용하도록 변경
 import "./Page1.css";
 
 export const Page1 = ({ className, ...props }) => {
@@ -25,18 +26,25 @@ export const Page1 = ({ className, ...props }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post('http://127.0.0.1:8000/user/login/', formData); 
+      // const response = await axios.post('http://127.0.0.1:8000/user/login/', formData, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
       console.log(response.data);
-      if (response.data.message === 'Login successful') {
-        navigate('/state1'); 
+      const { access, refresh } = response.data.token;
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      const userId = response.data.user.id; // 사용자 ID 가져오기
+      localStorage.setItem('user_id', userId); // ID 저장
+      if (response.data.message ==="login success" ) {
+        navigate('/'); 
       }
     } catch (error) {
       console.error(error);
       alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+      
     }
   };
 

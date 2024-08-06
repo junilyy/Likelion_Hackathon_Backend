@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { FaHeart, FaRunning, FaBicycle, FaSwimmer, FaBasketballBall, FaFutbol, FaDumbbell, FaWalking, FaBaseballBall, FaSkiing, FaTableTennis, FaVolleyballBall } from 'react-icons/fa';
 
 const exerciseIcons = [
-  { icon: FaFutbol, label: 'soccer' },
-  { icon: FaBasketballBall, label: 'basketball' },
-  { icon: FaBaseballBall, label: 'baseball' },
-  { icon: FaSwimmer, label: 'swimming' },
-  { icon: FaDumbbell, label: 'weightlifting' },
-  { icon: FaWalking, label: 'walking' },
-  { icon: FaRunning, label: 'running' },
-  { icon: FaBicycle, label: 'cycling' },
-  { icon: FaSkiing, label: 'skiing' },
-  { icon: FaTableTennis, label: 'table tennis' },
-  { icon: FaVolleyballBall, label: 'volleyball' }
+  { icon: FaFutbol, label: 'soccer', calories: 700 },
+  { icon: FaBasketballBall, label: 'basketball', calories: 650 },
+  { icon: FaBaseballBall, label: 'baseball', calories: 350 },
+  { icon: FaSwimmer, label: 'swimming', calories: 700 },
+  { icon: FaDumbbell, label: 'weightlifting', calories: 400 },
+  { icon: FaWalking, label: 'walking', calories: 300 },
+  { icon: FaRunning, label: 'running', calories: 600 },
+  { icon: FaBicycle, label: 'cycling', calories: 500 },
+  { icon: FaSkiing, label: 'skiing', calories: 600 },
+  { icon: FaTableTennis, label: 'table tennis', calories: 400 },
+  { icon: FaVolleyballBall, label: 'volleyball', calories: 300 }
 ];
 
 const ExerciseSelection = ({ onConfirm, consumedCalories }) => {
@@ -26,8 +26,38 @@ const ExerciseSelection = ({ onConfirm, consumedCalories }) => {
     );
   };
 
+  const calculateMinutes = (calories, caloriesPerHour) => {
+    const hours = calories / caloriesPerHour;
+    const minutes = Math.floor(hours * 60);
+    return minutes;
+  };
+
   const handleConfirm = () => {
     const selected = exerciseIcons.filter(({ label }) => selectedExercises.includes(label));
+    const date = new Date().toISOString().split('T')[0]; // 현재 날짜를 'YYYY-MM-DD' 형식으로 가져오기
+
+    const exerciseData = selected.map(exercise => ({
+      name: exercise.label,
+      calories: exercise.calories,
+      date: date
+    }));
+
+    // 백엔드로 데이터 보내기
+    fetch('http://127.0.0.1:8000/savecal/exercise/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(exerciseData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
     onConfirm(selected);
   };
 
@@ -37,7 +67,7 @@ const ExerciseSelection = ({ onConfirm, consumedCalories }) => {
         <FaHeart style={mainIconStyle} />
         <p style={questionStyle}>어떤 운동을 하실건가요?</p>
         <div style={exerciseGridStyle}>
-          {exerciseIcons.map(({ icon: Icon, label }, index) => (
+          {exerciseIcons.map(({ icon: Icon, label, calories }, index) => (
             <div
               key={index}
               style={{
@@ -47,6 +77,9 @@ const ExerciseSelection = ({ onConfirm, consumedCalories }) => {
               onClick={() => toggleExerciseSelection(label)}
             >
               <Icon style={exerciseIconStyle} />
+              {selectedExercises.includes(label) && (
+                <p style={calorieTextStyle}>{calculateMinutes(consumedCalories, calories)} 분</p>
+              )}
             </div>
           ))}
         </div>
@@ -89,10 +122,11 @@ const exerciseGridStyle = {
 
 const exerciseIconWrapperStyle = {
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '60px',
-  height: '60px',
+  width: '80px',
+  height: '80px',
   borderRadius: '50%',
   border: '1px solid #ccc',
   padding: '5px',
@@ -102,6 +136,12 @@ const exerciseIconWrapperStyle = {
 
 const exerciseIconStyle = {
   fontSize: '24px',
+};
+
+const calorieTextStyle = {
+  marginTop: '5px',
+  fontSize: '12px',
+  color: '#007bff',
 };
 
 const confirmButtonStyle = {

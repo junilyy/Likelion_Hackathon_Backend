@@ -1,27 +1,27 @@
-import React from 'react';
+// src/components/Page4.js
+
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 import "./Page4.css";
 
-const Page4 = ({ className, ...props }) => {
+const Page4 = () => {
+  const { formData, updateFormData } = useContext(UserContext);
   const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate('/page3');
-  };
+  const [gender, setGender] = useState(formData.gender);
+  const [height, setHeight] = useState(formData.height);
+  const [weight, setWeight] = useState(formData.weight);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // 서버로 데이터를 전송하는 로직을 여기에 추가하세요.
-    // 예: fetch('/api/submit', { method: 'POST', body: JSON.stringify(formData) })
-
-    // 데이터를 성공적으로 전송한 후 다음 페이지로 이동
+    updateFormData({ gender, height, weight });
     navigate('/page5');
   };
 
   return (
-    <div className={`page4-container ${className}`} {...props}>
+    <div className="page4-container">
       <div className="p4-header">
-        <div className="p4-back-arrow" onClick={handleBackClick}>&larr;</div>
+        <div className="p4-back-arrow" onClick={() => navigate('/page3')}>&larr;</div>
         <div className="p4-progress-text">3/4</div>
       </div>
       <form className="p4-form-group" onSubmit={handleSubmit}>
@@ -29,12 +29,12 @@ const Page4 = ({ className, ...props }) => {
           <label className="p4-form-label">성별</label>
           <div className="p4-gender-selection">
             <div className="p4-gender-option">
-              <input type="checkbox" id="male" name="gender" value="male" />
-              <label htmlFor="male" className="p4-gender-label">남자</label>
+              <input type="radio" id="M" name="gender" value="M" checked={gender === 'M'} onChange={(e) => setGender(e.target.value)} />
+              <label htmlFor="M" className="p4-gender-label">남자</label>
             </div>
             <div className="p4-gender-option">
-              <input type="checkbox" id="female" name="gender" value="female" />
-              <label htmlFor="female" className="p4-gender-label">여자</label>
+              <input type="radio" id="F" name="gender" value="F" checked={gender === 'F'} onChange={(e) => setGender(e.target.value)} />
+              <label htmlFor="F" className="p4-gender-label">여자</label>
             </div>
           </div>
           <div className="p4-form-divider"></div>
@@ -42,14 +42,14 @@ const Page4 = ({ className, ...props }) => {
         <div className="p4-form-item">
           <label className="p4-form-label">키</label>
           <div className="p4-age-input-group">
-            <input type="text" className="p4-form-input small-input" />
+            <input type="text" className="p4-form-input small-input" value={height} onChange={(e) => setHeight(e.target.value)} />
             <span className="p4-age-label">cm</span>
           </div>
         </div>
         <div className="p4-form-item">
           <label className="p4-form-label">몸무게</label>
           <div className="p4-age-input-group">
-            <input type="text" className="p4-form-input small-input" />
+            <input type="text" className="p4-form-input small-input" value={weight} onChange={(e) => setWeight(e.target.value)} />
             <span className="p4-age-label">kg</span>
           </div>
         </div>

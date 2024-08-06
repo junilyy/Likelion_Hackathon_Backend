@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LogoScreen from './components/LogoScreen';
 import MainScreen from './components/MainScreen';
 import ExerciseRecommendation from './components/ExerciseRecommendation';
@@ -17,7 +17,7 @@ import MapContainer from './components/map/MapContainer';
 import RestaurantRecommendations from './components/map/RestaurantRecommendations';
 
 const AppContent = () => {
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
   const [showLogo, setShowLogo] = useState(true);
   const [showMainScreen, setShowMainScreen] = useState(false);
   const [showExerciseRecommendation, setShowExerciseRecommendation] = useState(false);

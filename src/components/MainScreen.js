@@ -3,110 +3,133 @@ import { useNavigate } from 'react-router-dom';
 import logoIcon from './logo.png';
 import { FaDumbbell, FaUtensils, FaUser } from 'react-icons/fa';
 
+const appContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#fff',
+  margin: 0,
+};
+
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100vh',
-  paddingTop: '5%',
+  height: '100%',
+  width: '375px',
+  paddingTop: '0',
   fontFamily: 'Noto Sans KR, sans-serif',
-  backgroundColor: '#f0f4f8',
+  backgroundColor: '#fff',
+  borderRadius: '0px',
+  overflow: 'hidden',
+  position: 'relative',
+};
+
+const headerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
+  padding: '20px 15px', // Increased padding for larger logo area
+  backgroundColor: '#fff',
 };
 
 const logoStyle = {
-  marginBottom: '40px',
-  width: '80px',
-  borderRadius: '50%',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  width: '150px', // Larger logo
+  height: '150px',
+  objectFit: 'cover',
 };
 
-const buttonStyle = {
-  marginBottom: '20px',
-  padding: '10px 20px',
-  backgroundColor: 'transparent',
-  border: '2px solid #007bff',
-  borderRadius: '30px',
+const buttonWrapperStyle = {
+  width: '100%',
+  height: '30%', // Adjusted height for the button wrapper
   display: 'flex',
+  justifyContent: 'space-around',
+  alignItems: 'center',
+  position: 'absolute',
+  bottom: '0', // Position the buttons at the bottom
+};
+
+const buttonContainerStyle = {
+  width: '30%', // Adjust width to ensure three buttons fit nicely
+  height: '250px', // Adjusted height
+  display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  width: '200px',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s, color 0.3s, transform 0.3s',
+  borderRadius: '10px', // Rounded ends for rectangular buttons
+  cursor: 'pointer', // Ensuring the entire area is clickable
+  transition: 'transform 0.3s, background-color 0.3s, color 0.3s', // Smooth transition for hover effects
   position: 'relative',
   overflow: 'hidden',
-  textDecoration: 'none',
-  color: '#007bff',
 };
 
+const buttonColors = ['#066979', '#02869A', '#09A2BB']; // Teal-based similar colors
+
 const iconStyle = {
-  marginRight: '10px',
-  fontSize: '20px',
+  fontSize: '80px', // Adjusted icon size
+  color: 'black',
+  position: 'absolute',
+  top: '20px',
 };
 
 const textStyle = {
-  display: 'inline-block',
-  flex: 1,
-  textAlign: 'center',
+  fontSize: '15px', // Adjusted font size
+  fontWeight: 'bold',
+  color: 'black',
+  marginTop: '70px', // Position text below the icon
+  opacity: '0', // Initially hidden
+  transition: 'opacity 0.3s', // Smooth transition for text appearance
 };
 
-const hoverCircleStyle = {
+const ovalContainerStyle = {
+  width: '100%',
+  height: '40px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   position: 'absolute',
-  top: '50%',
-  left: '50%',
-  width: '200%',
-  height: '200%',
-  backgroundColor: 'rgba(0, 123, 255, 0.1)',
-  borderRadius: '50%',
-  transform: 'translate(-50%, -50%) scale(0)',
-  transition: 'transform 0.3s',
-  pointerEvents: 'none',
-  zIndex: 1,
+  bottom: '0',
+  backgroundColor: '#5A9',
+  borderTopLeftRadius: '50% 20%',
+  borderTopRightRadius: '50% 20%',
+  padding: '10px 0',
+  zIndex: 0,
 };
 
-const footerStyle = {
-  marginTop: '10px', // Adjust this margin to place the footer closer to the "내 정보" button
-  padding: '20px',
-  textAlign: 'center',
-};
-
-const linkStyle = {
-  margin: '0 10px',
-  cursor: 'pointer',
-  color: '#007bff',
-  textDecoration: 'none',
+const authButtonStyle = {
+  color: '#fff',
   fontSize: '16px',
-  transition: 'color 0.3s',
+  fontWeight: 'bold',
+  textDecoration: 'none',
+  margin: '0 5px',
+  cursor: 'pointer',
 };
 
-const applyHoverEffect = (buttonRef, hoverCircleRef) => {
-  buttonRef.addEventListener('mouseenter', () => {
-    hoverCircleRef.style.transform = 'translate(-50%, -50%) scale(1)';
-    buttonRef.style.backgroundColor = '#007bff';
-    buttonRef.style.color = '#ffffff';
-  });
-
-  buttonRef.addEventListener('mouseleave', () => {
-    hoverCircleRef.style.transform = 'translate(-50%, -50%) scale(0)';
-    buttonRef.style.backgroundColor = 'transparent';
-    buttonRef.style.color = '#007bff';
-  });
-};
-
-const ButtonWithHoverEffect = ({ onClick, icon: Icon, text }) => {
+const ButtonWithHoverEffect = ({ onClick, icon: Icon, text, backgroundColor }) => {
   const buttonRef = useRef(null);
-  const hoverCircleRef = useRef(null);
+  const textRef = useRef(null);
 
   useEffect(() => {
-    applyHoverEffect(buttonRef.current, hoverCircleRef.current);
+    if (buttonRef.current && textRef.current) {
+      buttonRef.current.addEventListener('mouseenter', () => {
+        buttonRef.current.style.transform = 'translateY(-10px)'; // Move button up on hover
+        textRef.current.style.opacity = '1'; // Show text on hover
+      });
+
+      buttonRef.current.addEventListener('mouseleave', () => {
+        buttonRef.current.style.transform = 'translateY(0)'; // Reset button position
+        textRef.current.style.opacity = '0'; // Hide text when not hovered
+      });
+    }
   }, []);
 
   return (
-    <button ref={buttonRef} style={buttonStyle} onClick={onClick}>
-      <div ref={hoverCircleRef} style={hoverCircleStyle}></div>
-      <Icon style={iconStyle} /> <span style={textStyle}>{text}</span>
-    </button>
+    <div style={{ ...buttonContainerStyle, backgroundColor }} onClick={onClick} ref={buttonRef}>
+      <Icon style={iconStyle} />
+      <span style={{ ...textStyle }} ref={textRef}>{text}</span>
+    </div>
   );
 };
 
@@ -114,14 +137,37 @@ const MainScreen = ({ onExerciseRecommendation }) => {
   const navigate = useNavigate();
 
   return (
-    <div style={containerStyle}>
-      <img src={logoIcon} alt="Logo Icon" style={logoStyle} />
-      <ButtonWithHoverEffect onClick={onExerciseRecommendation} icon={FaDumbbell} text="운동 추천" />
-      <ButtonWithHoverEffect icon={FaUtensils} text="음식 추천" onClick={() => navigate('/map')} />
-      <ButtonWithHoverEffect icon={FaUser} text="내 정보" onClick={() => navigate('/state1')} />
-      <div style={footerStyle}>
-        <span style={linkStyle} onClick={() => navigate('/page1')}>로그인</span>
-        <span style={linkStyle} onClick={() => navigate('/page2')}>회원가입</span>
+    <div style={appContainerStyle}>
+      <div style={containerStyle}>
+        <div style={headerStyle}>
+          <img src={logoIcon} alt="Logo Icon" style={logoStyle} />
+          <div style={{ fontFamily: 'Pacifico, Cursive, Arial, sans-serif', marginTop: '20px', fontSize: '2em', color: '#4A4949' }}>Zero with you</div>
+        </div>
+        <div style={buttonWrapperStyle}>
+          <ButtonWithHoverEffect
+            onClick={onExerciseRecommendation}
+            icon={FaDumbbell}
+            text="Exercise"
+            backgroundColor={buttonColors[0]}
+          />
+          <ButtonWithHoverEffect
+            icon={FaUtensils}
+            text="Food"
+            onClick={() => navigate('/map')}
+            backgroundColor={buttonColors[1]}
+          />
+          <ButtonWithHoverEffect
+            icon={FaUser}
+            text="Profile"
+            onClick={() => navigate('/state1')}
+            backgroundColor={buttonColors[2]}
+          />
+        </div>
+        <div style={ovalContainerStyle}>
+          <span style={authButtonStyle} onClick={() => navigate('/page1')}>Login</span>
+          <span style={authButtonStyle}>/</span>
+          <span style={authButtonStyle} onClick={() => navigate('/page2')}>Sign Up</span>
+        </div>
       </div>
     </div>
   );

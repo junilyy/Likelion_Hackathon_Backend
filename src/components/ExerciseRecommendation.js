@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { FaUtensils, FaHamburger, FaPizzaSlice, FaDrumstickBite, FaFish, FaBreadSlice, FaCarrot, FaIceCream, FaAppleAlt, FaCookie, FaEgg } from 'react-icons/fa';
+import { FaUtensils, FaPizzaSlice, FaDrumstickBite, FaFish, FaBreadSlice, FaCarrot, FaIceCream, FaAppleAlt, FaCookie, FaEgg } from 'react-icons/fa';
 
 const foodIcons = [
-  { icon: FaHamburger, label: 'burger', calories: 300 },
-  { icon: FaPizzaSlice, label: 'pizza', calories: 270 },
-  { icon: FaDrumstickBite, label: 'chicken', calories: 250 },
-  { icon: FaFish, label: 'fish', calories: 200 },
-  { icon: FaBreadSlice, label: 'bread', calories: 80 },
-  { icon: FaCarrot, label: 'carrot', calories: 25 },
-  { icon: FaIceCream, label: 'ice-cream', calories: 200 },
-  { icon: FaAppleAlt, label: 'apple', calories: 95 },
-  { icon: FaCookie, label: 'cookie', calories: 160 },
-  { icon: FaEgg, label: 'egg', calories: 70 }
+  { icon: FaPizzaSlice, label: 'pizza', name: 'Pizza', calories: 270 },
+  { icon: FaDrumstickBite, label: 'chicken', name: 'Chicken', calories: 250 },
+  { icon: FaFish, label: 'fish', name: 'Fish', calories: 200 },
+  { icon: FaBreadSlice, label: 'bread', name: 'Bread', calories: 80 },
+  { icon: FaCarrot, label: 'carrot', name: 'Carrot', calories: 25 },
+  { icon: FaIceCream, label: 'ice-cream', name: 'Ice Cream', calories: 200 },
+  { icon: FaAppleAlt, label: 'apple', name: 'Apple', calories: 95 },
+  { icon: FaCookie, label: 'cookie', name: 'Cookie', calories: 160 },
+  { icon: FaEgg, label: 'egg', name: 'Egg', calories: 70 }
 ];
 
 const ExerciseRecommendation = ({ onNext }) => {
@@ -25,7 +24,40 @@ const ExerciseRecommendation = ({ onNext }) => {
     );
   };
 
+  const sendFoodData = async (foodData) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/savecal/food/', { // 백엔드 엔드포인트 URL 설정
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(foodData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Successfully sent food data:', responseData);
+    } catch (error) {
+      console.error('Error sending food data:', error);
+    }
+  };
+
   const handleNext = () => {
+    const currentDate = new Date().toISOString().split('T')[0]; // 현재 날짜 설정
+
+    const selectedFoodData = selectedFoods.map((label) => {
+      const food = foodIcons.find((item) => item.label === label);
+      return {
+        name: food.name,
+        calories: food.calories,
+        date: currentDate,
+      };
+    });
+
+    sendFoodData(selectedFoodData);
     const totalCalories = selectedFoods.reduce((acc, label) => {
       const food = foodIcons.find((item) => item.label === label);
       return acc + (food ? food.calories : 0);
@@ -113,7 +145,7 @@ const nextButtonStyle = {
   border: 'none',
   borderRadius: '5px',
   fontSize: '16px',
-  cursor: 'pointer',
+  cursor: 'pointer',  
   transition: 'background-color 0.3s',
 };
 
