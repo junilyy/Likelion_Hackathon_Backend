@@ -24,6 +24,8 @@ const State3 = ({ className, ...props }) => {
                 });
                 setConsumedKcal(response.data.consumedKcal);
                 setBasalMetabolicRate(response.data.basalMetabolicRate);
+                console.log('Consumed Kcal:', response.data.consumedKcal);
+                console.log('Basal Metabolic Rate:', response.data.basalMetabolicRate);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -32,7 +34,7 @@ const State3 = ({ className, ...props }) => {
         fetchData();
     }, []);
 
-    const percentBurned = Math.min((consumedKcal / (consumedKcal + basalMetabolicRate)) * 100, 100);
+    const percentBurned = Math.min(((consumedKcal + basalMetabolicRate) / 3000) * 100, 100);
     const currentDate = new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' });
 
     return (
